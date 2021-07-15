@@ -5,6 +5,10 @@ import { GraphQLModule } from '@nestjs/graphql'
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ReataurantsModule } from './reataurants/reataurants.module';
 import { Restaurant } from './reataurants/entities/restaurant.entity';
+import { UsersModule } from './users/users.module';
+import { CommonModule } from './common/common.module';
+
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
@@ -12,20 +16,25 @@ import { Restaurant } from './reataurants/entities/restaurant.entity';
       isGlobal: true,
       envFilePath: process.env.NODE_ENV === "dev" ? ".dev.env" : ".test.env",
       ignoreEnvFile: process.env.NODE_ENV === 'prod',
+      /*
       validationSchema: Joi.object({
         NODE_ENV: Joi.string()
-          .valid('dev', 'prod'),
-//          .required(),
-        DB_HOST: Joi.string(),
-        DB_USERNAME: Joi.string(),
-        DB_PASSWORD: Joi.string(),
-        DB_NAME: Joi.string(),
+          .valid('dev', 'prod')
+          .required(),
+        DB_HOST: Joi.string().required(),
+        DB_USERNAME: Joi.string().required(),
+        DB_PASSWORD: Joi.string().required(),
+        DB_NAME: Joi.string().required(),
       }),
+      */
     }),
+
     GraphQLModule.forRoot({
       autoSchemaFile: true,
     }),
+
     ReataurantsModule,
+
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -35,8 +44,12 @@ import { Restaurant } from './reataurants/entities/restaurant.entity';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod',
-      entities: [Restaurant]
-    })
+      entities: [User]
+    }),
+
+    UsersModule,
+
+    CommonModule
   ],
   controllers: [],
   providers: [],
