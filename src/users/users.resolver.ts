@@ -2,13 +2,13 @@ import { Resolver,Query, Mutation, Args } from "@nestjs/graphql";
 import { CreateAccountInput, CreateAccountOutput } from "./dtos/ceate-account.dto";
 import { LoginInput, LoginOutput } from "./dtos/login.dto";
 import { User } from "./entities/user.entity";
-import { UsersService } from "./users.service";
+import { UserService } from "./users.service";
 
 
 @Resolver(of => User)
-export class UsersResolver {
+export class UserResolver {
     constructor(
-        private readonly usersService: UsersService
+        private readonly usersService: UserService
     ) {}
 
     @Query(returns => Boolean)
@@ -35,12 +35,18 @@ export class UsersResolver {
     @Mutation(returns => LoginOutput) //로그인
     async login(@Args('input') loginInput: LoginInput): Promise<LoginOutput> {
         try {
-            return await this.usersService.login(loginInput)
+            const { ok, error, token } = await this.usersService.login(loginInput);
+            return { ok, error, token };
         } catch(error) {
             return {
                 ok: false,
                 error,
             };
         }
+    }
+
+    @Query(returns => User)
+    me() {
+        
     }
 }
