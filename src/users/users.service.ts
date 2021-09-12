@@ -5,10 +5,10 @@ import * as jwt from "jsonwebtoken";
 import { CreateAccountInput } from "./dtos/ceate-account.dto";
 import { LoginInput } from "./dtos/login.dto";
 import { User } from "./entities/user.entity";
-import { JwtService } from "src/jwt/jwt.service";
+import { JwtService } from "../jwt/jwt.service";
 import { EditProfileInput } from "./dtos/edit-profile.dto";
 import { Verification } from "./entities/verification.entity";
-import { MailService } from "src/mail/mail.service";
+import { MailService } from "../mail/mail.service";
 
 @Injectable()
 export class UserService {

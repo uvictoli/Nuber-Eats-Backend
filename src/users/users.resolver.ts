@@ -27,8 +27,8 @@ export class UserResolver {
             };
         } catch(error) {
             return {
-                error,
                 ok: false,
+                error,
             };
         }
     }
@@ -67,8 +67,8 @@ export class UserResolver {
             } 
         } catch(e) {
             return {
-                error: "User Not Found",
                 ok: false,
+                error: "User Not Found",
             };
         }
     }
