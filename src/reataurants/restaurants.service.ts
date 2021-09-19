@@ -2,11 +2,12 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/users/entities/user.entity";
 import { Repository } from "typeorm";
+import { CreateDishInput, CreateDishOutput } from "./dtos/create-dish.dto";
 import { createRestaurantInput, CreateRestaurantOutput } from "./dtos/create-restaurant.dto";
 import { DeleteRestaurantInput, DeleteRestaurantOutput } from "./dtos/delete-restaurant.dto";
 import { EditRestaurantInput, EditRestaurantOutput } from "./dtos/edit-restaurant.dto";
-import { UpdateRestaurantDto } from "./dtos/update-restaurant.dto";
 import { Category } from "./entities/category.entity";
+import { Dish } from "./entities/dish.entity";
 import { Restaurant } from "./entities/restaurant.entity";
 import { CategoryRepository } from "./repositories/category.repository";
 
@@ -15,6 +16,8 @@ export class RestaurantService {
     constructor(
         @InjectRepository(Restaurant) 
         private readonly restaurants: Repository<Restaurant>,
+        @InjectRepository(Dish) 
+        private readonly dishes: Repository<Dish>,
         private readonly categories: CategoryRepository,
         ) {}
 
@@ -115,8 +118,42 @@ export class RestaurantService {
                     error: "Could not delete"
                 };
             }
+    }
+
+    async createDish(
+        owner: User, 
+        createDishInput: CreateDishInput
+        ): Promise<CreateDishOutput> {
+            try {
+            const restaurant = await this.restaurants.findOne(
+                createDishInput.restaurantId
+            );
+            if(!restaurant) {
+                return {
+                    ok: false,
+                    error: "Restaurant not found"
+                };
+            }
+            if(owner.id !== restaurant.ownerId) {
+                return {
+                    ok: false,
+                    error: "You can't do that."
+                };
+            }
+            await this.dishes.save(
+                this.dishes.create({...createDishInput, restaurant})
+            );
+            return {
+                ok: true,
+            };
+        } catch(error) {
+            return {
+                ok: false,
+                error: "Could not create dish"
+            };
         }
-    
+    }
+
 
 
 }
