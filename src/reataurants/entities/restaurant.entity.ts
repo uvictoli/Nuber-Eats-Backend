@@ -1,5 +1,6 @@
 import { Field, InputType, ObjectType } from "@nestjs/graphql";
 import { IsString} from "class-validator";
+import { Order } from "src/orders/entities/order.entity";
 import { User } from "src/users/entities/user.entity";
 import { Column, Entity, ManyToOne, OneToMany, RelationId } from "typeorm";
 import { Category } from "./category.entity";
@@ -48,4 +49,11 @@ export class Restaurant {
         dish => dish.restaurant,
     )
     menu: Dish[];
+
+    @Field(type => Order)
+    @OneToMany(
+        type => Order,
+        order => order.restaurant,
+    )
+    orders: Order[];
 }

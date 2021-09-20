@@ -14,6 +14,9 @@ import { MailModule } from './mail/mail.module';
 import { Restaurant } from './reataurants/entities/restaurant.entity';
 import { Category } from './reataurants/entities/category.entity';
 import { Dish } from './reataurants/entities/dish.entity';
+import { OrdersModule } from './orders/orders.module';
+import { Order } from './orders/entities/order.entity';
+import { OrderItem } from './orders/entities/order-item.entity';
 
 @Module({
   imports: [
@@ -53,7 +56,7 @@ import { Dish } from './reataurants/entities/dish.entity';
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test',
       entities: [
-        User, Verification, Restaurant, Category, Dish
+        User, Verification, Restaurant, Category, Dish, Order, OrderItem,
       ]
     }),
     UsersModule,
@@ -67,6 +70,7 @@ import { Dish } from './reataurants/entities/dish.entity';
       domain: process.env.MAILGUN_DOMAIN_NAME,
       fromEmail: process.env.MAILGUN_FROM_EMAIL,
     }),
+    OrdersModule,
   ],
   controllers: [],
   providers: [],
